@@ -4,6 +4,7 @@ var keysArray = [];
 var lettersGuessed = [];
 var bandsArray = ["QUEEN", "METALLICA", "ACDC", "JOURNEY", "REM", "POISON"];
 var nameArray = [];
+var correctGuesses = [];
 var guessesRemaining = 15;
 var gameActive = true;
 
@@ -13,19 +14,24 @@ for (var i = 65; i < 91; i++){
 	keysArray.push(i);
 }
 
-//Generate a random number from 0-5
-var random_num = Math.random() * 6;
-random_num = Math.floor(random_num);
+//Pick a random word from the bandsArray and fill the nameArray with the letters of the bands names.
+generateWord();
+function generateWord(){
+	//Generate a random number from 0-5
+	var random_num = Math.random() * 6;
+	random_num = Math.floor(random_num);
 
-//Assign randomWord to a word from the array whose index was chosen randomly.
-var randomWord = bandsArray[random_num];
-console.log(randomWord);
+	//Assign randomWord to a word from the array whose index was chosen randomly.
+	var randomWord = bandsArray[random_num];
+	console.log(randomWord);
 
-//Fill up the nameArra with the letters of the band names.
-for (var j=0; j < randomWord.length; j++){
-	nameArray.push(randomWord.charAt(j));
+	//Fill up the nameArra with the letters of the band names.
+	for (var j=0; j < randomWord.length; j++){
+		nameArray.push(randomWord.charAt(j));
+	}
+	console.log(nameArray);
 }
-console.log(nameArray);
+
 
 //On every keyup...
 document.onkeyup = function(e) {
@@ -40,7 +46,7 @@ document.onkeyup = function(e) {
 
 	//Check to see if the letter matches one of the letters in the randomWord
 	checkMatch();
-	console.log(charsArray + randomWord);
+
 
 	//Displays the number of guesses remaining and the letters guessed.
 	printToHTML();
@@ -133,15 +139,28 @@ function keyCodeToChar(){
 }
 
 
-
+//Sole purpose is to check if the currentLetter is also found in nameArray (the array containing letters of band names)
 function checkMatch(){
-
-		if (currentLetter == randomWord.charAt(0) || currentLetter == randomWord.charAt(1) || currentLetter == randomWord.charAt(2)){
-			console.log("match!");
+	for (var i = 0; i < nameArray.length; i++){
+		if (currentLetter == nameArray[i]){
+			isMatch();
 		}
-
+		else {
+			isNotMatch();
+		}
+	}
 }
 
+
+
+function isMatch(){
+	console.log("match!");
+}
+
+function isNotMatch(){
+	checkRepeat();
+	console.log("no match!")
+}
 
 
 //If the currentLetter is the same as one in the charsArray, run the isRepeat function.	Otherwise run the isNotRepeat function.
@@ -155,16 +174,13 @@ function checkRepeat (){
 	}
 }
 
-
 function isRepeat(){
 
 }
-
 //If it's not a repeat, push the current letter into the charsArray, decrease number of guesses left by 1
 function isNotRepeat(){
 	lettersGuessed.push(currentLetter);
 	gussesRemaining--;
-
 }
 
 
@@ -173,7 +189,7 @@ function printToHTML(){
 
 	document.getElementById("letters-guessed").innerHTML = lettersGuessed;
 	document.getElementById("guesses-remaining").innerHTML = guessesRemaining;
-	document.getElementById("current-word").innerHTML = randomWord;
+	document.getElementById("current-word").innerHTML = nameArray;
 }
 
 
