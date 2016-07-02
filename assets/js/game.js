@@ -1,160 +1,181 @@
-var keysArray = [];
-var charsArray = [];
+var keyUp;
 var currentLetter;
-var wordsArray = ["queen", "metallica", "acdc", "journey", "rem", "poison"];
-var numGuesses = 15;
+var keysArray = [];
+var lettersGuessed = [];
+var bandsArray = ["QUEEN", "METALLICA", "ACDC", "JOURNEY", "REM", "POISON"];
+var nameArray = [];
+var guessesRemaining = 15;
 var gameActive = true;
 
 
-
-//Creates an array containing the keyCode values for the letters a to z.
+//Fills up the keysArray with the values 65-91.
 for (var i = 65; i < 91; i++){
 	keysArray.push(i);
 }
 
+//Generate a random number from 0-5
+var random_num = Math.random() * 6;
+random_num = Math.floor(random_num);
 
-function checkGuess(){
-	if (numGuesses > 0){
-		numGuesses--;
-	}
-	else {
-		numGuesses = 15;
-		charsArray = [];
-	}
-	charsArray.push(currentLetter);
+//Assign randomWord to a word from the array whose index was chosen randomly.
+var randomWord = bandsArray[random_num];
+console.log(randomWord);
+
+//Fill up the nameArra with the letters of the band names.
+for (var j=0; j < randomWord.length; j++){
+	nameArray.push(randomWord.charAt(j));
 }
+console.log(nameArray);
 
-
-//Trigger's when any key is pressed.
+//On every keyup...
 document.onkeyup = function(e) {
 
-	//Assigns keyCode to corresponding characters.
-	if (e.keyCode == keysArray[0]){
+	//Take in the keyCode value for the letter pressed and put it in the keyUp variable.
+	keyUp = e.keyCode;
+	console.log(keyUp);
+
+	//Convert every keycode to its corresponding letter in the alphabet.
+	keyCodeToChar();
+	console.log(currentLetter);
+
+	//Check to see if the letter matches one of the letters in the randomWord
+	checkMatch();
+	console.log(charsArray + randomWord);
+
+	//Displays the number of guesses remaining and the letters guessed.
+	printToHTML();
+
+}
+
+//If keyUp (a number) is equal to the value in the keysArray, then assign currentLetter to the one letter strings (alphabet).
+function keyCodeToChar(){
+	if (keyUp == keysArray[0]){
 		currentLetter = "A";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[1]){
+	else if (keyUp == keysArray[1]){
 		currentLetter = "B";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[2]){
+	else if (keyUp == keysArray[2]){
 		currentLetter = "C";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[3]){
+	else if (keyUp == keysArray[3]){
 		currentLetter = "D";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[4]){
+	else if (keyUp == keysArray[4]){
 		currentLetter = "E";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[5]){
+	else if (keyUp == keysArray[5]){
 		currentLetter = "F";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[6]){
+	else if (keyUp == keysArray[6]){
 		currentLetter = "G";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[7]){
+	else if (keyUp == keysArray[7]){
 		currentLetter = "H";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[8]){
+	else if (keyUp == keysArray[8]){
 		currentLetter = "I";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[9]){
+	else if (keyUp == keysArray[9]){
 		currentLetter = "J";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[10]){
+	else if (keyUp == keysArray[10]){
 		currentLetter = "K";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[11]){
+	else if (keyUp == keysArray[11]){
 		currentLetter = "L";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[12]){
+	else if (keyUp == keysArray[12]){
 		currentLetter = "M";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[13]){
+	else if (keyUp == keysArray[13]){
 		currentLetter = "N";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[14]){
+	else if (keyUp == keysArray[14]){
 		currentLetter = "O";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[15]){
+	else if (keyUp == keysArray[15]){
 		currentLetter = "P";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[16]){
+	else if (keyUp == keysArray[16]){
 		currentLetter = "Q";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[17]){
+	else if (keyUp == keysArray[17]){
 		currentLetter = "R";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[18]){
+	else if (keyUp == keysArray[18]){
 		currentLetter = "S";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[19]){
+	else if (keyUp == keysArray[19]){
 		currentLetter = "T";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[20]){
+	else if (keyUp == keysArray[20]){
 		currentLetter = "U";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[21]){
+	else if (keyUp == keysArray[21]){
 		currentLetter = "V";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[22]){
+	else if (keyUp == keysArray[22]){
 		currentLetter = "W";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[23]){
+	else if (keyUp == keysArray[23]){
 		currentLetter = "X";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[24]){
+	else if (keyUp == keysArray[24]){
 		currentLetter = "Y";
-		checkGuess(numGuesses);
 	}
-	else if (e.keyCode == keysArray[25]){
+	else if (keyUp == keysArray[25]){
 		currentLetter = "Z";
-		checkGuess(numGuesses);
 	}
 	else {
 		alert("You didn't press a letter!")
+	}	
+}
+
+
+
+function checkMatch(){
+
+		if (currentLetter == randomWord.charAt(0) || currentLetter == randomWord.charAt(1) || currentLetter == randomWord.charAt(2)){
+			console.log("match!");
+		}
+
+}
+
+
+
+//If the currentLetter is the same as one in the charsArray, run the isRepeat function.	Otherwise run the isNotRepeat function.
+function checkRepeat (){
+
+	if ((currentLetter == lettersGuessed[0]) || (currentLetter == lettersGuessed[1]) || (currentLetter == lettersGuessed[2]) || (currentLetter == lettersGuessed[3]) || (currentLetter == lettersGuessed[4]) || (currentLetter == lettersGuessed[5]) || (currentLetter == lettersGuessed[6]) || (currentLetter == lettersGuessed[7]) || (currentLetter == lettersGuessed[8]) || (currentLetter == lettersGuessed[9]) || (currentLetter == lettersGuessed[10]) || (currentLetter == lettersGuessed[11]) || (currentLetter == lettersGuessed[12]) || (currentLetter == lettersGuessed[13])){
+		isRepeat();
 	}
+	else{
+		isNotRepeat();
+	}
+}
 
 
-document.getElementById("letters-guessed").innerHTML = charsArray;
-document.getElementById("guesses-remaining").innerHTML = numGuesses;
+function isRepeat(){
+
+}
+
+//If it's not a repeat, push the current letter into the charsArray, decrease number of guesses left by 1
+function isNotRepeat(){
+	lettersGuessed.push(currentLetter);
+	gussesRemaining--;
 
 }
 
 
+//I can invoke this whenever i need to display the information.
+function printToHTML(){
 
-function playHangman(){
-
-	//Generate a random number from 0-5
-	var random_num = Math.random() * 6;
-	random_num = Math.floor(random_num);
-
-	var randomWord = wordsArray[random_num];
-
+	document.getElementById("letters-guessed").innerHTML = lettersGuessed;
+	document.getElementById("guesses-remaining").innerHTML = guessesRemaining;
 	document.getElementById("current-word").innerHTML = randomWord;
-
 }
+
+
 
 
