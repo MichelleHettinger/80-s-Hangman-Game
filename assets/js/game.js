@@ -1,9 +1,8 @@
 var keyUp;
-var currentLetter;
 var keysArray = [];
 var lettersGuessed = [];
 var bandsArray = ["QUEEN", "METALLICA", "ACDC", "JOURNEY", "REM", "POISON"];
-var nameArray = [];
+var bandLetters = [];
 var correctGuesses = [];
 var guessesRemaining = 15;
 var gameActive = true;
@@ -14,7 +13,7 @@ for (var i = 65; i < 91; i++){
 	keysArray.push(i);
 }
 
-//Pick a random word from the bandsArray and fill the nameArray with the letters of the bands names.
+//Pick a random word from the bandsArray and fill the bandLetters with the letters of the bands names.
 generateWord();
 function generateWord(){
 	//Generate a random number from 0-5
@@ -23,33 +22,15 @@ function generateWord(){
 
 	//Assign randomWord to a word from the array whose index was chosen randomly.
 	var randomWord = bandsArray[random_num];
-	console.log(randomWord);
+
 
 	//Fill up the nameArra with the letters of the band names.
 	for (var j=0; j < randomWord.length; j++){
-		nameArray.push(randomWord.charAt(j));
+		bandLetters.push(randomWord.charAt(j));
 	}
-	console.log(nameArray);
-}
 
-
-//On every keyup...
-document.onkeyup = function(e) {
-
-	//Take in the keyCode value for the letter pressed and put it in the keyUp variable.
-	keyUp = e.keyCode;
-	console.log(keyUp);
-
-	//Convert every keycode to its corresponding letter in the alphabet.
-	keyCodeToChar();
-	console.log(currentLetter);
-
-	//Check to see if the letter matches one of the letters in the randomWord
-	checkMatch();
-
-
-	//Displays the number of guesses remaining and the letters guessed.
-	printToHTML();
+	//Shows that a randomly chosen band name was converted into an array containing each of its letters.
+	console.log(randomWord + " " + bandLetters + " " + lettersGuessed);
 
 }
 
@@ -138,50 +119,73 @@ function keyCodeToChar(){
 	}	
 }
 
+//On every keyup...
+document.onkeyup = function(q) {
 
-//Sole purpose is to check if the currentLetter is also found in nameArray (the array containing letters of band names)
-function checkMatch(){
-	for (var i = 0; i < nameArray.length; i++){
-		if (currentLetter == nameArray[i]){
-			isMatch();
+	//Take in the keyCode value for the letter pressed and put it in the keyUp variable.
+	keyUp = q.keyCode;
+
+	//Convert every keycode to its corresponding letter in the alphabet and assigns it to currentLetter.
+	keyCodeToChar();
+
+	//Setting up variables to be used in other functions.
+	var letter = currentLetter;
+	var band = bandLetters;
+	lettersGuessed.push(currentLetter);
+	var allGuesses = lettersGuessed;
+
+	//Makes sure all my variables are working correctly, so i am able to use them.
+	console.log("Current Letter: " + letter + "\n" + "Band Letters: " + band + "\n" + "Letters Guessed: " + allGuesses);
+
+	//Returns true if the letter matches one from the band name and false if it does not.
+	checkMatch(letter, band);
+
+	if (checkMatch(true) && checkRepeat(false)){
+		lettersGuessed.push(currentLetter);
+		console.log(lettersGuessed);
+	}
+
+	checkRepeat(letter, allGuesses);
+
+
+}
+
+//Sole purpose is to check if the currentLetter is also found in letters of band names)
+function checkMatch(letter, band){
+	for (var i=0; i < band.length; i++){
+		if (letter == band[i]){
+			console.log("Match!");
+			return true;
 		}
 		else {
-			isNotMatch();
+			console.log("No match :(");
+			return false;
+		}
+	}
+}
+
+//Sole purpose is to check if the currentLetter has been pressed before.
+function checkRepeat(letter, allGuesses){
+	if (allGuesses.length = 0){
+		return false;
+	}
+
+	else {
+		for (var i=0; i <  allGuesses.length; i++){
+			if (letter == allGuesses[i]){
+				console.log("Typed that already!");
+				return true;
+				}
 		}
 	}
 }
 
 
 
-function isMatch(){
-	console.log("match!");
-}
-
-function isNotMatch(){
-	checkRepeat();
-	console.log("no match!")
-}
 
 
-//If the currentLetter is the same as one in the charsArray, run the isRepeat function.	Otherwise run the isNotRepeat function.
-function checkRepeat (){
 
-	if ((currentLetter == lettersGuessed[0]) || (currentLetter == lettersGuessed[1]) || (currentLetter == lettersGuessed[2]) || (currentLetter == lettersGuessed[3]) || (currentLetter == lettersGuessed[4]) || (currentLetter == lettersGuessed[5]) || (currentLetter == lettersGuessed[6]) || (currentLetter == lettersGuessed[7]) || (currentLetter == lettersGuessed[8]) || (currentLetter == lettersGuessed[9]) || (currentLetter == lettersGuessed[10]) || (currentLetter == lettersGuessed[11]) || (currentLetter == lettersGuessed[12]) || (currentLetter == lettersGuessed[13])){
-		isRepeat();
-	}
-	else{
-		isNotRepeat();
-	}
-}
 
-function isRepeat(){
-
-}
-//If it's not a repeat, push the current letter into the charsArray, decrease number of guesses left by 1
-function isNotRepeat(){
-	lettersGuessed.push(currentLetter);
-	gussesRemaining--;
-}
 
 
 //I can invoke this whenever i need to display the information.
@@ -189,9 +193,18 @@ function printToHTML(){
 
 	document.getElementById("letters-guessed").innerHTML = lettersGuessed;
 	document.getElementById("guesses-remaining").innerHTML = guessesRemaining;
-	document.getElementById("current-word").innerHTML = nameArray;
+
 }
 
 
 
 
+
+
+
+// if ((currentLetter == lettersGuessed[0]) || (currentLetter == lettersGuessed[1]) || (currentLetter == lettersGuessed[2]) || (currentLetter == lettersGuessed[3]) || (currentLetter == lettersGuessed[4]) || (currentLetter == lettersGuessed[5]) || (currentLetter == lettersGuessed[6]) || (currentLetter == lettersGuessed[7]) || (currentLetter == lettersGuessed[8]) || (currentLetter == lettersGuessed[9]) || (currentLetter == lettersGuessed[10]) || (currentLetter == lettersGuessed[11]) || (currentLetter == lettersGuessed[12]) || (currentLetter == lettersGuessed[13])){
+// 	return true;
+// }
+// else{
+// 	return false;
+// }
