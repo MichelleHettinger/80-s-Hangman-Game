@@ -4,8 +4,12 @@ var lettersGuessed = [];
 var bandsArray = ["QUEEN", "METALLICA", "ACDC", "JOURNEY", "REM", "POISON"];
 var bandLetters = [];
 var correctGuesses = [];
+var lettersDisplayed = [];
 var guessesRemaining = 15;
-var gameActive = true;
+var match;
+var repeat;
+var loseCount;
+var winCount;
 
 
 //Fills up the keysArray with the values 65-91.
@@ -14,6 +18,7 @@ for (var i = 65; i < 91; i++){
 }
 
 //Pick a random word from the bandsArray and fill the bandLetters with the letters of the bands names.
+//This function generates a word once at the loading of the .js and again later when a round is won/lost.
 generateWord();
 function generateWord(){
 	//Generate a random number from 0-5
@@ -31,7 +36,6 @@ function generateWord(){
 
 	//Shows that a randomly chosen band name was converted into an array containing each of its letters.
 	console.log(randomWord + " " + bandLetters + " " + lettersGuessed);
-
 }
 
 //If keyUp (a number) is equal to the value in the keysArray, then assign currentLetter to the one letter strings (alphabet).
@@ -119,74 +123,142 @@ function keyCodeToChar(){
 	}	
 }
 
+//Sole purpose is to check if the letter key has been pressed before.
+function checkRepeat(letter, allGuesses){
+	var repeat = -1;
+	var noRepeat = 0;
+
+	for (var i=0; i < allGuesses.length; i++){
+		if (letter == allGuesses[i]){
+			repeat++;
+		}
+		else {
+			noRepeat++;
+		}
+		if (repeat == 0){
+			noRepeat++
+		}
+	}
+	var total_checkRepeat = (repeat + noRepeat);
+	console.log("repeats: " + repeat + "\n" + "non-repeats:" + noRepeat + "\n" + "total:" + total_checkRepeat);
+
+	if (repeat == 0){
+		notRepeat();
+	}
+	else{
+		isRepeat();
+	}
+}
+function isRepeat(){
+	repeat = true;
+}
+function notRepeat(){
+	repeat = false;
+}
+
+//Sole purpose is to check if the currentLetter is also found in letters of band names)
+function checkMatch(letter, band){
+	var match = 0;
+	var noMatch = 0;
+
+	for (var i=0; i < band.length; i++){
+		if (letter == band[i]){
+			match++;
+		}
+		else {
+			noMatch++;
+		}
+	}
+	var total_checkMatch = (match + noMatch);
+	console.log("matches: " + match + "\n" + "non-matches:" + noMatch + "\n" + "total:" + total_checkMatch);
+
+	if (match == 0){
+		notMatch();
+
+	}
+	else{
+		isMatch();
+	}
+}
+function isMatch(){
+	match = true;
+}
+function notMatch(){
+	match = false;
+}
+
+//This function determines what to do with a letter that's been guessed.
+function match_repeatComparison(){
+	//Any time the same key is pressed twice, it is NOT put into lettersGuessed.
+	if (repeat == true){
+		lettersGuessed.pop(currentLetter);
+	}
+	//Letter has not been guessed and was a wrong guess, put letter in lettersDisplayed.
+	else if (repeat == false && match == false){
+		lettersDisplayed.push(currentLetter);
+		guessesRemaining--;
+	}
+	//Letter has not been guessed and was a correct guess, put the letter in correctGuesses.
+	if (repeat == false && match == true){
+		correctGuesses.push(currentLetter);
+		guessesRemaining--;
+	}
+}
+
 //On every keyup...
 document.onkeyup = function(q) {
 
 	//Take in the keyCode value for the letter pressed and put it in the keyUp variable.
 	keyUp = q.keyCode;
-
 	//Convert every keycode to its corresponding letter in the alphabet and assigns it to currentLetter.
 	keyCodeToChar();
+
 
 	//Setting up variables to be used in other functions.
 	var letter = currentLetter;
 	var band = bandLetters;
-	lettersGuessed.push(currentLetter);
+	lettersGuessed.push(letter);
 	var allGuesses = lettersGuessed;
-
 	//Makes sure all my variables are working correctly, so i am able to use them.
 	console.log("Current Letter: " + letter + "\n" + "Band Letters: " + band + "\n" + "Letters Guessed: " + allGuesses);
 
-	//Returns true if the letter matches one from the band name and false if it does not.
-	checkMatch(letter, band);
 
-	if (checkMatch(true) && checkRepeat(false)){
-		lettersGuessed.push(currentLetter);
-		console.log(lettersGuessed);
-	}
-
-	checkRepeat(letter, allGuesses);
+	//Checks to see if the letter has been typed before. Returns repeat = true OR repeat = false.
+	checkRepeat(letter, allGuesses, isRepeat);
+	//Checks to see if the leetter matches with one in the band name. Returns match = true OR match = false.
+	checkMatch(letter, band, isMatch);
+	//Makes sure that my functions are correctly returning true and false.
+	console.log("Match: " + match + "\n" + "Repeat:" + repeat);
 
 
+	//This function determines what to do with a letter that's been guessed.
+	match_repeatComparison();
+	//Make sure my arrays to be displayed on the page are working correctly.
+	console.log(correctGuesses);
+	console.log(lettersDisplayed);
+
+	checkGuessesRemaining();
+	console.log("Guesses remaining:" + guessesRemaining);
+
+	// printToHTML();
+
+
+
+//end onkey
 }
 
-//Sole purpose is to check if the currentLetter is also found in letters of band names)
-function checkMatch(letter, band){
-	for (var i=0; i < band.length; i++){
-		if (letter == band[i]){
-			console.log("Match!");
-			return true;
-		}
-		else {
-			console.log("No match :(");
-			return false;
-		}
-	}
-}
-
-//Sole purpose is to check if the currentLetter has been pressed before.
-function checkRepeat(letter, allGuesses){
-	if (allGuesses.length = 0){
-		return false;
-	}
-
-	else {
-		for (var i=0; i <  allGuesses.length; i++){
-			if (letter == allGuesses[i]){
-				console.log("Typed that already!");
-				return true;
-				}
-		}
+function checkGuessesRemaining(){
+	if (guessesRemaining == 0){
+		alert("You lose!");
+		loseCount++;
+		changeWord();
 	}
 }
 
 
-
-
-
-
-
-
+function changeWord(){
+	
+}
 
 //I can invoke this whenever i need to display the information.
 function printToHTML(){
@@ -195,16 +267,3 @@ function printToHTML(){
 	document.getElementById("guesses-remaining").innerHTML = guessesRemaining;
 
 }
-
-
-
-
-
-
-
-// if ((currentLetter == lettersGuessed[0]) || (currentLetter == lettersGuessed[1]) || (currentLetter == lettersGuessed[2]) || (currentLetter == lettersGuessed[3]) || (currentLetter == lettersGuessed[4]) || (currentLetter == lettersGuessed[5]) || (currentLetter == lettersGuessed[6]) || (currentLetter == lettersGuessed[7]) || (currentLetter == lettersGuessed[8]) || (currentLetter == lettersGuessed[9]) || (currentLetter == lettersGuessed[10]) || (currentLetter == lettersGuessed[11]) || (currentLetter == lettersGuessed[12]) || (currentLetter == lettersGuessed[13])){
-// 	return true;
-// }
-// else{
-// 	return false;
-// }
