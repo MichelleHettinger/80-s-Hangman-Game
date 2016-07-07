@@ -2,7 +2,7 @@ var keyUp;
 var keysArray = [];
 var lettersGuessed = [];
 var randomWord;
-var bandsArray = ["QUEEN", "METALLICA", "ACDC", "JOURNEY", "REM", "POISON"];
+var bandsArray = ["QUEEN", "METALLICA", "ACDC", "JOURNEY", "REM", "POISON", "BLONDIE", "GENESIS", "DEVO"];
 var bandLetters = [];
 var correctGuesses = [];
 var displayedGuesses = [];
@@ -26,8 +26,8 @@ for (var i = 65; i < 91; i++){
 generateWord();
 //This function generates a word once at the loading of the .js and again later when a round is won/lost.
 function generateWord(){
-	//Generate a random number from 0-5
-	var random_num = Math.random() * 6;
+	//Generate a random number from 0-8
+	var random_num = Math.random() * 9;
 	random_num = Math.floor(random_num);
 
 	//Assign randomWord to a word from the array whose index was chosen randomly.
