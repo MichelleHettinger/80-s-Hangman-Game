@@ -20,6 +20,73 @@ var savedLetters = [];
 for (var i = 65; i < 91; i++){
 	keysArray.push(i);
 }
+
+
+//Pick a random word from the bandsArray and fill the bandLetters with the letters of the bands names.
+generateWord();
+//This function generates a word once at the loading of the .js and again later when a round is won/lost.
+function generateWord(){
+	//Generate a random number from 0-5
+	var random_num = Math.random() * 6;
+	random_num = Math.floor(random_num);
+
+	//Assign randomWord to a word from the array whose index was chosen randomly.
+	randomWord = bandsArray[random_num];
+
+
+	//Fill up the nameArra with the letters of the band names.
+	for (var j=0; j < randomWord.length; j++){
+		bandLetters.push(randomWord.charAt(j));
+	}
+
+	//Shows that a randomly chosen band name was converted into an array containing each of its letters.
+	console.log(randomWord + " " + bandLetters + " " + lettersGuessed);
+}
+
+
+//On every keyup...
+document.onkeyup = function(q) {
+
+	//Take in the keyCode value for the letter pressed and put it in the keyUp variable.
+	keyUp = q.keyCode;
+	//Convert every keycode to its corresponding letter in the alphabet and assigns it to currentLetter.
+	keyCodeToChar();
+
+
+	//Setting up variables to be used in other functions.
+	var letter = currentLetter;
+	var band = bandLetters;
+	lettersGuessed.push(letter);
+	var allGuesses = lettersGuessed;
+	//Makes sure all my variables are working correctly, so i am able to use them.
+	console.log("Current Letter: " + letter + "\n" + "Band Letters: " + band + "\n" + "Letters Guessed: " + allGuesses);
+
+
+	//Checks to see if the letter has been typed before. Returns repeat = true OR repeat = false.
+	checkRepeat(letter, allGuesses);
+	//Checks to see if the letter matches with one in the band name. Returns match = true OR match = false.
+	checkMatch(letter, band);
+	//Makes sure that my functions are correctly returning true and false.
+	console.log("Match: " + match + "\n" + "Repeat:" + repeat);
+
+
+	//This function determines what to do with a letter that's been guessed.
+	match_repeatComparison();
+	//Make sure my arrays to be displayed on the page are working correctly.
+	console.log("correctGuesses: " + correctGuesses);
+	console.log("lettersDisplayed: " + lettersDisplayed);
+
+	//Reveals the band name as it is being guessed.
+	revealBand();
+
+	checkGuessesRemaining(displayedGuesses);
+	console.log("guessesRemaining:" + guessesRemaining);
+
+
+	printToHTML();
+}
+
+
 //If keyUp is equal to the value in the keysArray, then assign currentLetter to the one letter strings (alphabet).
 function keyCodeToChar(){
 	if (keyUp == keysArray[0]){
@@ -100,33 +167,15 @@ function keyCodeToChar(){
 	else if (keyUp == keysArray[25]){
 		currentLetter = "Z";
 	}
-	else {
-		alert("You didn't press a letter!")
-	}	
-}
-
-
-//Pick a random word from the bandsArray and fill the bandLetters with the letters of the bands names.
-generateWord();
-//This function generates a word once at the loading of the .js and again later when a round is won/lost.
-function generateWord(){
-	//Generate a random number from 0-5
-	var random_num = Math.random() * 6;
-	random_num = Math.floor(random_num);
-
-	//Assign randomWord to a word from the array whose index was chosen randomly.
-	randomWord = bandsArray[random_num];
-
-
-	//Fill up the nameArra with the letters of the band names.
-	for (var j=0; j < randomWord.length; j++){
-		bandLetters.push(randomWord.charAt(j));
+	else if (keyUp == 32){
+		currentLetter = "space";
+		// revealBand();
+		// printToHTML();
 	}
-
-	//Shows that a randomly chosen band name was converted into an array containing each of its letters.
-	console.log(randomWord + " " + bandLetters + " " + lettersGuessed);
+	// else {
+	// 	alert("You didn't press a letter!")
+	// }	
 }
-
 
 //Sole purpose is to check if the letter has been pressed before.
 function checkRepeat(letter, allGuesses){
@@ -194,67 +243,25 @@ function notMatch(){
 
 //This function determines what to do with a letter that's been guessed.
 function match_repeatComparison(){
-	//If the same key is pressed twice, it is NOT put into lettersGuessed.
-	if (repeat == true){
-		lettersGuessed.pop(currentLetter);
-	}
-	//Letter has not been guessed and was a wrong guess, put letter in lettersDisplayed.
-	if (repeat == false && match == false){
-		lettersDisplayed.push(currentLetter);
-		guessesRemaining--;
-	}
-	//Letter has not been guessed and was a correct guess, put the letter in correctGuesses.
-	if (repeat == false && match == true){
-		correctGuesses.push(currentLetter);
-		guessesRemaining--;
+	//Only run the function if currentLetter is not a space.
+	if (currentLetter != "space"){
+		//If the same key is pressed twice, it is NOT put into lettersGuessed.
+		if (repeat == true){
+			lettersGuessed.pop(currentLetter);
+		}
+		//Letter has not been guessed and was a wrong guess, put letter in lettersDisplayed.
+		if (repeat == false && match == false){
+			lettersDisplayed.push(currentLetter);
+			guessesRemaining--;
+		}
+		//Letter has not been guessed and was a correct guess, put the letter in correctGuesses.
+		if (repeat == false && match == true){
+			correctGuesses.push(currentLetter);
+			guessesRemaining--;
+		}
 	}
 }
-
-//On every keyup...
-document.onkeyup = function(q) {
-
-	//Take in the keyCode value for the letter pressed and put it in the keyUp variable.
-	keyUp = q.keyCode;
-	//Convert every keycode to its corresponding letter in the alphabet and assigns it to currentLetter.
-	keyCodeToChar();
-
-
-	//Setting up variables to be used in other functions.
-	var letter = currentLetter;
-	var band = bandLetters;
-	lettersGuessed.push(letter);
-	var allGuesses = lettersGuessed;
-	//Makes sure all my variables are working correctly, so i am able to use them.
-	console.log("Current Letter: " + letter + "\n" + "Band Letters: " + band + "\n" + "Letters Guessed: " + allGuesses);
-
-
-	//Checks to see if the letter has been typed before. Returns repeat = true OR repeat = false.
-	checkRepeat(letter, allGuesses);
-	//Checks to see if the letter matches with one in the band name. Returns match = true OR match = false.
-	checkMatch(letter, band);
-	//Makes sure that my functions are correctly returning true and false.
-	console.log("Match: " + match + "\n" + "Repeat:" + repeat);
-
-
-	//This function determines what to do with a letter that's been guessed.
-	match_repeatComparison();
-	//Make sure my arrays to be displayed on the page are working correctly.
-	console.log("correctGuesses: " + correctGuesses);
-	console.log("lettersDisplayed: " + lettersDisplayed);
-
-	//Reveals the band name as it is being guessed.
-	revealBand();
-
-	checkGuessesRemaining(displayedGuesses);
-	console.log("guessesRemaining:" + guessesRemaining);
-
-
-	printToHTML();
-
-
-//end onkey
-}
-
+//Keeps track of guesses remaining and determines win or loss.
 function checkGuessesRemaining(dispGuess){
 	var counter = 0;
 
@@ -280,41 +287,13 @@ function checkGuessesRemaining(dispGuess){
 	}
 }
 
-
-function changeWord(){
-	lettersGuessed = [];
-	bandLetters = [];
-	correctGuesses = [];
-	lettersDisplayed = [];
-	displayedGuesses = [];
-	guessesRemaining = 15;
-
-	generateWord();
-}
-
-
-
-
-
-
-
-
-//I can invoke this whenever i need to display the information.
-function printToHTML(){
-	document.getElementById("num-wins").innerHTML = ("Wins: " + winCount + "  " + "Losses: " + loseCount);
-	document.getElementById("letters-guessed").innerHTML = lettersDisplayed;
-	document.getElementById("guesses-remaining").innerHTML = guessesRemaining;
-}
-
-
+//This function slowly reveals the band name as the letters are guessed correctly.
 function revealBand(){
 	if (displayedGuesses.length == 0){
 		for (var i =0; i<bandLetters.length; i++){
 			displayedGuesses[i] = "_";
 		}
 	}
-
-	
 	for (var i=0; i<bandLetters.length; i++){
 		//Only enter the comparison loop if displayedGuesses at [i] has not been guessed.
 		if (displayedGuesses[i] != bandLetters[i]){
@@ -331,4 +310,22 @@ function revealBand(){
 	
 
 	document.getElementById("current-word").innerHTML = displayedGuesses;
+}
+//I can invoke this whenever i need to display the information.
+function printToHTML(){
+	document.getElementById("num-wins").innerHTML = ("Wins: " + winCount + "  " + "Losses: " + loseCount);
+	document.getElementById("letters-guessed").innerHTML = lettersDisplayed;
+	document.getElementById("guesses-remaining").innerHTML = guessesRemaining;
+}
+
+//This function runs when a win or loss has been reached. Resets the variables and generates a new word.
+function changeWord(){
+	lettersGuessed = [];
+	bandLetters = [];
+	correctGuesses = [];
+	lettersDisplayed = [];
+	displayedGuesses = [];
+	guessesRemaining = 15;
+
+	generateWord();
 }
